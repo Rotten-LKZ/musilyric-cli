@@ -1,13 +1,3 @@
-# folder_path = input('Welcome to use Musilyric-cli\nInput absolute folder path where music files are\nInput: ')
-# print(f'Folder path: {folder_path}')
-
-# overwrite = input('Do you wanna overwrite your existing lyric tag?\nInput([Y]es, [N]o): ')
-# if overwrite.lower() == 'yes' or overwrite.lower() == 'y':
-#     overwrite = True
-# else:
-#     overwrite = False
-# print(f'You chose {" " if overwrite else "not "}to overwrite.')
-
 import os
 import mutagen
 
@@ -20,7 +10,9 @@ def get_all_files(path):
     dirs = os.listdir(path)
     for _dir in dirs:
         if not os.path.isdir(_dir):
-            if _dir.endswith('.mp3') or _dir.endswith('.flac') or _dir.endswith('.ogg'):
+            # originally plan to support .mp3
+            # if _dir.endswith('.mp3') or _dir.endswith('.flac') or _dir.endswith('.ogg'):
+            if _dir.endswith('.flac') or _dir.endswith('.ogg'):
                 _files.append(_dir)
 
     return _files
@@ -38,8 +30,15 @@ def find_lyric(name):
 
 
 if __name__ == '__main__':
-    folder_path = r'D:\Music\自下\test_collection'
-    overwrite = True
+    folder_path = input('Welcome to use Musilyric-cli\nInput absolute folder path where music files are\nInput: ')
+    print(f'Folder path: {folder_path}')
+
+    overwrite = input('Do you wanna overwrite your existing lyric tag?\nInput([Y]es, [N]o): ')
+    if overwrite.lower() == 'yes' or overwrite.lower() == 'y':
+        overwrite = True
+    else:
+        overwrite = False
+    print(f'You chose {"" if overwrite else "not "}to overwrite.')
 
     dirs = os.listdir(folder_path)
 
@@ -59,5 +58,8 @@ if __name__ == '__main__':
                 mutagen_file['LYRICS'] = [f.read().replace('\n', '\r\n')]
                 mutagen_file.save()
                 f.close()
+                success_files.append(file)
             else:
                 ...
+
+    print(f'We add/overwrite lyric tags into {len(success_files)} of {len(files)}')
